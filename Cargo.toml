@@ -1,0 +1,25 @@
+[package]
+name = "homomorphic_inference"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+flate2 = "1.0"
+ndarray = "0.15.3"
+byteorder = "1.4.3"
+rand = "0.8.4"
+concrete-core = "0.1.9"
+concrete-commons = "0.1.0"
+elisabeth = { git = "ssh://git@github.com/princess-elisabeth/Elisabeth", branch = "neural_network", features=["single_key"] }
+
+crypto = { git = "ssh://git@github.com/zama-beta/zamavm-beta", branch = "development" }
+graph-loader = { git = "ssh://git@github.com/zama-beta/zamavm-beta", branch = "development" }
+graph-executor = { git = "ssh://git@github.com/zama-beta/zamavm-beta", branch = "development" }
+fhe-graph = { git = "ssh://git@github.com/zama-beta/zamavm-beta", branch = "development" }
+tensor-operator = { git = "ssh://git@github.com/zama-beta/zamavm-beta", branch = "development" }
+concrete_vm = { git = "ssh://git@github.com/zama-beta/concrete_internal-beta", package = "concrete-core", branch = "new_rte2" }
+
+[profile.release]
+lto = "fat"

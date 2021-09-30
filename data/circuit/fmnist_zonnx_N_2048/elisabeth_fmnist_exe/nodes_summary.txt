@@ -1,0 +1,18 @@
+
+0_with_noise_0_zonnx_shifted: AddWithConstant
+1: PBS
+2: ConvMultisum
+2_with_noise_1_zonnx_shifted: AddWithConstant
+2_with_noise_1_zonnx_shifted_zonnx_internal_node_key_switch: KS
+3: PBS
+4: Flatten
+5: GemmMultisum
+5_with_noise_2_zonnx_shifted: AddWithConstant
+5_with_noise_2_zonnx_shifted_zonnx_internal_node_key_switch: KS
+6: PBS
+7: GemmMultisum
+7_with_noise_3_zonnx_shifted: AddWithConstant
+7_with_noise_3_zonnx_shifted_zonnx_internal_node_key_switch: KS
+8: PBS
+9_without_noise: GemmMultisum
+9: AddWithConstant

@@ -1,0 +1,532 @@
+version: 0.2.0
+nodes:
+    '0':
+        node_type:
+            Input:
+                noise: -63
+                offset: 0
+                delta: 15.149999618530273
+                key: hardcoded_encryption_key_600
+        sources: []
+        output_shape:
+        - 1
+        - 1
+        - 28
+        - 28
+        output_encryption_key: hardcoded_encryption_key_600
+        output_precision: 32
+        sample_for_rte:
+            file: sample_for_rte_0_casted.npz
+            shape:
+            - 5
+            - 1
+            - 28
+            - 28
+            inside_type: uint64
+    0_with_noise_0_zonnx_shifted:
+        node_type:
+            AddWithConstant:
+                constant_to_add:
+                    file: constant_to_add_1_casted.npz
+                    shape:
+                    - 1
+                    - 28
+                    - 28
+                    inside_type: uint64
+        sources:
+        -   name: '0'
+            precision: 32
+        output_shape:
+        - 1
+        - 1
+        - 28
+        - 28
+        output_encryption_key: hardcoded_encryption_key_600
+        output_precision: 32
+        sample_for_rte:
+            file: sample_for_rte_2_casted.npz
+            shape:
+            - 5
+            - 1
+            - 28
+            - 28
+            inside_type: uint64
+    '1':
+        node_type:
+            PBS:
+                pbs_indexes:
+                    file: pbs_indexes_2.npz
+                    shape:
+                    - 1
+                    - 28
+                    - 28
+                    inside_type: uint32
+                pbs_test_vectors:
+                    file: pbs_test_vectors_2_casted.npz
+                    shape:
+                    - 6
+                    - 4096
+                    inside_type: uint64
+                parameters:
+                    k: 1
+                    level: 3
+                    base_log: 8
+                key: hardcoded_pbs_key
+        sources:
+        -   name: 0_with_noise_0_zonnx_shifted
+            precision: 32
+        output_shape:
+        - 1
+        - 1
+        - 28
+        - 28
+        output_encryption_key: hardcoded_encryption_key_1024
+        output_precision: 32
+        sample_for_rte:
+            file: sample_for_rte_7_casted.npz
+            shape:
+            - 5
+            - 1
+            - 28
+            - 28
+            inside_type: uint64
+    '2':
+        node_type:
+            ConvMultisum:
+                weight:
+                    file: weight_7_casted.npz
+                    shape:
+                    - 4
+                    - 1
+                    - 7
+                    - 7
+                    inside_type: uint64
+                bias:
+                    file: bias_7_casted.npz
+                    shape:
+                    - 4
+                    inside_type: uint64
+                dilatations:
+                - 1
+                - 1
+                group: 1
+                kernel_shape:
+                - 7
+                - 7
+                pads:
+                - 0
+                - 0
+                - 0
+                - 0
+                strides:
+                - 3
+                - 3
+        sources:
+        -   name: '1'
+            precision: 32
+        output_shape:
+        - 1
+        - 4
+        - 8
+        - 8
+        output_encryption_key: hardcoded_encryption_key_1024
+        output_precision: 32
+        sample_for_rte:
+            file: sample_for_rte_8_casted.npz
+            shape:
+            - 5
+            - 4
+            - 8
+            - 8
+            inside_type: uint64
+    2_with_noise_1_zonnx_shifted:
+        node_type:
+            AddWithConstant:
+                constant_to_add:
+                    file: constant_to_add_8_casted.npz
+                    shape:
+                    - 4
+                    - 8
+                    - 8
+                    inside_type: uint64
+        sources:
+        -   name: '2'
+            precision: 32
+        output_shape:
+        - 1
+        - 4
+        - 8
+        - 8
+        output_encryption_key: hardcoded_encryption_key_1024
+        output_precision: 32
+        sample_for_rte:
+            file: sample_for_rte_9_casted.npz
+            shape:
+            - 5
+            - 4
+            - 8
+            - 8
+            inside_type: uint64
+    2_with_noise_1_zonnx_shifted_zonnx_internal_node_key_switch:
+        node_type:
+            KS:
+                parameters:
+                    level: 3
+                    base_log: 8
+                key: hardcoded_key_switching_key
+        sources:
+        -   name: 2_with_noise_1_zonnx_shifted
+            precision: 32
+        output_shape:
+        - 1
+        - 4
+        - 8
+        - 8
+        output_encryption_key: hardcoded_encryption_key_600
+        output_precision: 32
+        sample_for_rte:
+            file: sample_for_rte_10_casted.npz
+            shape:
+            - 5
+            - 4
+            - 8
+            - 8
+            inside_type: uint64
+    '3':
+        node_type:
+            PBS:
+                pbs_indexes:
+                    file: pbs_indexes_10.npz
+                    shape:
+                    - 4
+                    - 8
+                    - 8
+                    inside_type: uint32
+                pbs_test_vectors:
+                    file: pbs_test_vectors_10_casted.npz
+                    shape:
+                    - 25
+                    - 4096
+                    inside_type: uint64
+                parameters:
+                    k: 1
+                    level: 3
+                    base_log: 8
+                key: hardcoded_pbs_key
+        sources:
+        -   name: 2_with_noise_1_zonnx_shifted_zonnx_internal_node_key_switch
+            precision: 32
+        output_shape:
+        - 1
+        - 4
+        - 8
+        - 8
+        output_encryption_key: hardcoded_encryption_key_1024
+        output_precision: 32
+        sample_for_rte:
+            file: sample_for_rte_15_casted.npz
+            shape:
+            - 5
+            - 4
+            - 8
+            - 8
+            inside_type: uint64
+    '4':
+        node_type:
+            Flatten: {}
+        sources:
+        -   name: '3'
+            precision: 32
+        output_shape:
+        - 1
+        - 256
+        output_encryption_key: hardcoded_encryption_key_1024
+        output_precision: 32
+        sample_for_rte:
+            file: sample_for_rte_16_casted.npz
+            shape:
+            - 5
+            - 256
+            inside_type: uint64
+    '5':
+        node_type:
+            GemmMultisum:
+                weight:
+                    file: weight_16_casted.npz
+                    shape:
+                    - 256
+                    - 64
+                    inside_type: uint64
+                bias:
+                    file: bias_16_casted.npz
+                    shape:
+                    - 64
+                    inside_type: uint64
+        sources:
+        -   name: '4'
+            precision: 32
+        output_shape:
+        - 1
+        - 64
+        output_encryption_key: hardcoded_encryption_key_1024
+        output_precision: 32
+        sample_for_rte:
+            file: sample_for_rte_17_casted.npz
+            shape:
+            - 5
+            - 64
+            inside_type: uint64
+    5_with_noise_2_zonnx_shifted:
+        node_type:
+            AddWithConstant:
+                constant_to_add:
+                    file: constant_to_add_17_casted.npz
+                    shape:
+                    - 64
+                    inside_type: uint64
+        sources:
+        -   name: '5'
+            precision: 32
+        output_shape:
+        - 1
+        - 64
+        output_encryption_key: hardcoded_encryption_key_1024
+        output_precision: 32
+        sample_for_rte:
+            file: sample_for_rte_18_casted.npz
+            shape:
+            - 5
+            - 64
+            inside_type: uint64
+    5_with_noise_2_zonnx_shifted_zonnx_internal_node_key_switch:
+        node_type:
+            KS:
+                parameters:
+                    level: 3
+                    base_log: 8
+                key: hardcoded_key_switching_key
+        sources:
+        -   name: 5_with_noise_2_zonnx_shifted
+            precision: 32
+        output_shape:
+        - 1
+        - 64
+        output_encryption_key: hardcoded_encryption_key_600
+        output_precision: 32
+        sample_for_rte:
+            file: sample_for_rte_19_casted.npz
+            shape:
+            - 5
+            - 64
+            inside_type: uint64
+    '6':
+        node_type:
+            PBS:
+                pbs_indexes:
+                    file: pbs_indexes_19.npz
+                    shape:
+                    - 64
+                    inside_type: uint32
+                pbs_test_vectors:
+                    file: pbs_test_vectors_19_casted.npz
+                    shape:
+                    - 21
+                    - 4096
+                    inside_type: uint64
+                parameters:
+                    k: 1
+                    level: 3
+                    base_log: 8
+                key: hardcoded_pbs_key
+        sources:
+        -   name: 5_with_noise_2_zonnx_shifted_zonnx_internal_node_key_switch
+            precision: 32
+        output_shape:
+        - 1
+        - 64
+        output_encryption_key: hardcoded_encryption_key_1024
+        output_precision: 32
+        sample_for_rte:
+            file: sample_for_rte_24_casted.npz
+            shape:
+            - 5
+            - 64
+            inside_type: uint64
+    '7':
+        node_type:
+            GemmMultisum:
+                weight:
+                    file: weight_24_casted.npz
+                    shape:
+                    - 64
+                    - 32
+                    inside_type: uint64
+                bias:
+                    file: bias_24_casted.npz
+                    shape:
+                    - 32
+                    inside_type: uint64
+        sources:
+        -   name: '6'
+            precision: 32
+        output_shape:
+        - 1
+        - 32
+        output_encryption_key: hardcoded_encryption_key_1024
+        output_precision: 32
+        sample_for_rte:
+            file: sample_for_rte_25_casted.npz
+            shape:
+            - 5
+            - 32
+            inside_type: uint64
+    7_with_noise_3_zonnx_shifted:
+        node_type:
+            AddWithConstant:
+                constant_to_add:
+                    file: constant_to_add_25_casted.npz
+                    shape:
+                    - 32
+                    inside_type: uint64
+        sources:
+        -   name: '7'
+            precision: 32
+        output_shape:
+        - 1
+        - 32
+        output_encryption_key: hardcoded_encryption_key_1024
+        output_precision: 32
+        sample_for_rte:
+            file: sample_for_rte_26_casted.npz
+            shape:
+            - 5
+            - 32
+            inside_type: uint64
+    7_with_noise_3_zonnx_shifted_zonnx_internal_node_key_switch:
+        node_type:
+            KS:
+                parameters:
+                    level: 3
+                    base_log: 8
+                key: hardcoded_key_switching_key
+        sources:
+        -   name: 7_with_noise_3_zonnx_shifted
+            precision: 32
+        output_shape:
+        - 1
+        - 32
+        output_encryption_key: hardcoded_encryption_key_600
+        output_precision: 32
+        sample_for_rte:
+            file: sample_for_rte_27_casted.npz
+            shape:
+            - 5
+            - 32
+            inside_type: uint64
+    '8':
+        node_type:
+            PBS:
+                pbs_indexes:
+                    file: pbs_indexes_27.npz
+                    shape:
+                    - 32
+                    inside_type: uint32
+                pbs_test_vectors:
+                    file: pbs_test_vectors_27_casted.npz
+                    shape:
+                    - 21
+                    - 4096
+                    inside_type: uint64
+                parameters:
+                    k: 1
+                    level: 3
+                    base_log: 8
+                key: hardcoded_pbs_key
+        sources:
+        -   name: 7_with_noise_3_zonnx_shifted_zonnx_internal_node_key_switch
+            precision: 32
+        output_shape:
+        - 1
+        - 32
+        output_encryption_key: hardcoded_encryption_key_1024
+        output_precision: 32
+        sample_for_rte:
+            file: sample_for_rte_32_casted.npz
+            shape:
+            - 5
+            - 32
+            inside_type: uint64
+    9_without_noise:
+        node_type:
+            GemmMultisum:
+                weight:
+                    file: weight_32_casted.npz
+                    shape:
+                    - 32
+                    - 10
+                    inside_type: uint64
+                bias:
+                    file: bias_32_casted.npz
+                    shape:
+                    - 10
+                    inside_type: uint64
+        sources:
+        -   name: '8'
+            precision: 32
+        output_shape:
+        - 1
+        - 10
+        output_encryption_key: hardcoded_encryption_key_1024
+        output_precision: 32
+        sample_for_rte:
+            file: sample_for_rte_33_casted.npz
+            shape:
+            - 5
+            - 10
+            inside_type: uint64
+    '9':
+        node_type:
+            AddWithConstant:
+                constant_to_add:
+                    file: constant_to_add_33_casted.npz
+                    shape:
+                    - 10
+                    inside_type: uint64
+        sources:
+        -   name: 9_without_noise
+            precision: 32
+        output_shape:
+        - 1
+        - 10
+        output_encryption_key: hardcoded_encryption_key_1024
+        output_precision: 32
+        sample_for_rte:
+            file: sample_for_rte_34_casted.npz
+            shape:
+            - 5
+            - 10
+            inside_type: uint64
+output_nodes:
+- '9'
+secret_keys:
+    hardcoded_encryption_key_600:
+        number_of_bits: 600
+    hardcoded_encryption_key_1024:
+        number_of_bits: 4096
+key_switching_keys:
+    hardcoded_key_switching_key:
+        input_secret_key: hardcoded_encryption_key_1024
+        output_secret_key: hardcoded_encryption_key_600
+        level: 3
+        base_log: 8
+        source_precision: 32
+        output_precision: 32
+        noise: -63
+pbs_keys:
+    hardcoded_pbs_key:
+        input_secret_key: hardcoded_encryption_key_600
+        output_secret_key: hardcoded_encryption_key_1024
+        level: 3
+        base_log: 8
+        k: 1
+        noise: -63

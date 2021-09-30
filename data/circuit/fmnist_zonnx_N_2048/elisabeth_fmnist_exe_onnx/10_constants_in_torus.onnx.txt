@@ -1,0 +1,64 @@
+graph torch-jit-export (
+  %0[FLOAT, 10x1x28x28]
+) optional inputs with matching initializers (
+  %conv.weight_modified_1[FLOAT, 4x1x7x7]
+  %fc1.weight_modified_2[FLOAT, 64x256]
+  %fc2.weight_modified_3[FLOAT, 32x64]
+  %fc3.weight_modified_4[FLOAT, 10x32]
+  %encoding_divisor_0[FLOAT, 1]
+  %one_half[FLOAT, 1]
+  %0_with_noise_0_zonnx_shift_value[FLOAT, 1x28x28]
+  %0_with_noise_0_zonnx_2N[FLOAT, 1]
+  %test_vector_0[FLOAT, 12288]
+  %0_with_noise_0_zonnx_times_two_n_rounded_increment[INT32, 1x28x28]
+  %2_with_noise_1_zonnx_shift_value[FLOAT, 4x8x8]
+  %2_with_noise_1_zonnx_2N[FLOAT, 1]
+  %test_vector_1[FLOAT, 51200]
+  %2_with_noise_1_zonnx_times_two_n_rounded_increment[INT32, 4x8x8]
+  %5_with_noise_2_zonnx_shift_value[FLOAT, 64]
+  %5_with_noise_2_zonnx_2N[FLOAT, 1]
+  %test_vector_2[FLOAT, 43008]
+  %5_with_noise_2_zonnx_times_two_n_rounded_increment[INT32, 64]
+  %7_with_noise_3_zonnx_shift_value[FLOAT, 32]
+  %7_with_noise_3_zonnx_2N[FLOAT, 1]
+  %test_vector_3[FLOAT, 43008]
+  %7_with_noise_3_zonnx_times_two_n_rounded_increment[INT32, 32]
+  %9_zonnx_shift_value[FLOAT, 1]
+  %conv.bias_modified_1_encoded_1[FLOAT, 4]
+  %fc1.bias_modified_2_encoded_3[FLOAT, 64]
+  %fc2.bias_modified_3_encoded_5[FLOAT, 32]
+  %fc3.bias_modified_4_encoded_7[FLOAT, 10]
+) {
+  %0_encoded = Div(%0, %encoding_divisor_0)
+  %0_with_noise_0_zonnx_shifted = Add(%0_encoded, %0_with_noise_0_zonnx_shift_value)
+  %0_with_noise_0_zonnx_times_two_n = Mul(%0_with_noise_0_zonnx_shifted, %0_with_noise_0_zonnx_2N)
+  %0_with_noise_0_zonnx_times_two_n_plus_one_half = Add(%0_with_noise_0_zonnx_times_two_n, %one_half)
+  %0_with_noise_0_zonnx_times_two_n_rounded = Cast[to = 6](%0_with_noise_0_zonnx_times_two_n_plus_one_half)
+  %0_with_noise_0_zonnx_times_two_n_rounded_incremented = Add(%0_with_noise_0_zonnx_times_two_n_rounded, %0_with_noise_0_zonnx_times_two_n_rounded_increment)
+  %1 = Gather(%test_vector_0, %0_with_noise_0_zonnx_times_two_n_rounded_incremented)
+  %2 = Conv[dilations = [1, 1], group = 1, kernel_shape = [7, 7], pads = [0, 0, 0, 0], strides = [3, 3]](%1, %conv.weight_modified_1, %conv.bias_modified_1_encoded_1)
+  %2_with_noise_1_zonnx_shifted = Add(%2, %2_with_noise_1_zonnx_shift_value)
+  %2_with_noise_1_zonnx_times_two_n = Mul(%2_with_noise_1_zonnx_shifted, %2_with_noise_1_zonnx_2N)
+  %2_with_noise_1_zonnx_times_two_n_plus_one_half = Add(%2_with_noise_1_zonnx_times_two_n, %one_half)
+  %2_with_noise_1_zonnx_times_two_n_rounded = Cast[to = 6](%2_with_noise_1_zonnx_times_two_n_plus_one_half)
+  %2_with_noise_1_zonnx_times_two_n_rounded_incremented = Add(%2_with_noise_1_zonnx_times_two_n_rounded, %2_with_noise_1_zonnx_times_two_n_rounded_increment)
+  %3 = Gather(%test_vector_1, %2_with_noise_1_zonnx_times_two_n_rounded_incremented)
+  %4 = Flatten[axis = 1](%3)
+  %5 = Gemm[alpha = 1, beta = 1, transB = 1](%4, %fc1.weight_modified_2, %fc1.bias_modified_2_encoded_3)
+  %5_with_noise_2_zonnx_shifted = Add(%5, %5_with_noise_2_zonnx_shift_value)
+  %5_with_noise_2_zonnx_times_two_n = Mul(%5_with_noise_2_zonnx_shifted, %5_with_noise_2_zonnx_2N)
+  %5_with_noise_2_zonnx_times_two_n_plus_one_half = Add(%5_with_noise_2_zonnx_times_two_n, %one_half)
+  %5_with_noise_2_zonnx_times_two_n_rounded = Cast[to = 6](%5_with_noise_2_zonnx_times_two_n_plus_one_half)
+  %5_with_noise_2_zonnx_times_two_n_rounded_incremented = Add(%5_with_noise_2_zonnx_times_two_n_rounded, %5_with_noise_2_zonnx_times_two_n_rounded_increment)
+  %6 = Gather(%test_vector_2, %5_with_noise_2_zonnx_times_two_n_rounded_incremented)
+  %7 = Gemm[alpha = 1, beta = 1, transB = 1](%6, %fc2.weight_modified_3, %fc2.bias_modified_3_encoded_5)
+  %7_with_noise_3_zonnx_shifted = Add(%7, %7_with_noise_3_zonnx_shift_value)
+  %7_with_noise_3_zonnx_times_two_n = Mul(%7_with_noise_3_zonnx_shifted, %7_with_noise_3_zonnx_2N)
+  %7_with_noise_3_zonnx_times_two_n_plus_one_half = Add(%7_with_noise_3_zonnx_times_two_n, %one_half)
+  %7_with_noise_3_zonnx_times_two_n_rounded = Cast[to = 6](%7_with_noise_3_zonnx_times_two_n_plus_one_half)
+  %7_with_noise_3_zonnx_times_two_n_rounded_incremented = Add(%7_with_noise_3_zonnx_times_two_n_rounded, %7_with_noise_3_zonnx_times_two_n_rounded_increment)
+  %8 = Gather(%test_vector_3, %7_with_noise_3_zonnx_times_two_n_rounded_incremented)
+  %9_without_noise = Gemm[alpha = 1, beta = 1, transB = 1](%8, %fc3.weight_modified_4, %fc3.bias_modified_4_encoded_7)
+  %9 = Add(%9_without_noise, %9_zonnx_shift_value)
+  return %9
+}

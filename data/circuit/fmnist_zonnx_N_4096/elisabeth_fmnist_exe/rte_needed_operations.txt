@@ -1,0 +1,2 @@
+
+Needed RTE operations (6): ['AddWithConstant', 'ConvMultisum', 'Flatten', 'GemmMultisum', 'KS', 'PBS']
